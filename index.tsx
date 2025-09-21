@@ -109,7 +109,7 @@ export class GdmLiveAudio extends LitElement {
   }
 
   private async initSession() {
-    const model = 'gemini-1.5-flash';
+    const model = 'gemini-2.5-flash-lite';
 
     try {
       this.session = await this.client.live.connect({
