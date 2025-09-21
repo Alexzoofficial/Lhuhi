@@ -94,13 +94,13 @@ export class GdmLiveAudio extends LitElement {
       return;
     }
 
-    if (!process.env.GEMINI_API_KEY) {
-      this.updateError('❌ Missing GEMINI_API_KEY: Add your Gemini API key to environment variables. ⚠️ WARNING: This will expose your key to all users!');
+    if (!process.env.GOOGLE_API_KEY) {
+      this.updateError('❌ Missing GOOGLE_API_KEY: Add your Google API key to environment variables. ⚠️ WARNING: This will expose your key to all users!');
       return;
     }
 
     this.client = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
+      apiKey: process.env.GOOGLE_API_KEY,
     });
 
     this.outputNode.connect(this.outputAudioContext.destination);
@@ -109,7 +109,7 @@ export class GdmLiveAudio extends LitElement {
   }
 
   private async initSession() {
-    const model = 'gemini-2.5-flash-preview-native-audio-dialog';
+    const model = 'gemini-1.5-flash';
 
     try {
       this.session = await this.client.live.connect({

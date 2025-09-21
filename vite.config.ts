@@ -21,7 +21,7 @@ export default defineConfig(() => {
         'process.env.INSECURE_DEMO': JSON.stringify(isInsecureDemo),
         // Only expose API key if explicitly enabled for insecure demo mode
         ...(isInsecureDemo && {
-          'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY)
+          'process.env.GOOGLE_API_KEY': JSON.stringify(process.env.GOOGLE_API_KEY)
         })
       },
       resolve: {
