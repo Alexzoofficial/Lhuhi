@@ -1,19 +1,28 @@
 import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
+export default defineConfig(() => {
+    const isInsecureDemo = process.env.INSECURE_DEMO === '1';
+    
     return {
       plugins: [],
       server: {
         host: '0.0.0.0',
         port: 5000,
-        allowedHosts: true
+        allowedHosts: true as true
+      },
+      preview: {
+        host: '0.0.0.0',
+        port: 5000,
+        strictPort: true
       },
       define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+        'process.env.INSECURE_DEMO': JSON.stringify(isInsecureDemo),
+        // Only expose API key if explicitly enabled for insecure demo mode
+        ...(isInsecureDemo && {
+          'process.env.GEMINI_API_KEY': JSON.stringify(process.env.GEMINI_API_KEY)
+        })
       },
       resolve: {
         alias: {

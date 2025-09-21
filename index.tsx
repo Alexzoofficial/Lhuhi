@@ -19,9 +19,9 @@ export class GdmLiveAudio extends LitElement {
   private client: GoogleGenAI;
   private session: Session;
   private inputAudioContext = new (window.AudioContext ||
-    window.webkitAudioContext)({sampleRate: 16000});
+    (window as any).webkitAudioContext)({sampleRate: 16000});
   private outputAudioContext = new (window.AudioContext ||
-    window.webkitAudioContext)({sampleRate: 24000});
+    (window as any).webkitAudioContext)({sampleRate: 24000});
   @state() inputNode = this.inputAudioContext.createGain();
   @state() outputNode = this.outputAudioContext.createGain();
   private nextStartTime = 0;
@@ -87,6 +87,17 @@ export class GdmLiveAudio extends LitElement {
 
   private async initClient() {
     this.initAudio();
+
+    // Security check: Prevent API key exposure unless explicitly enabled
+    if (!process.env.INSECURE_DEMO) {
+      this.updateError('❌ Backend required: This app needs a server-side proxy to securely handle the Gemini API key. For demo purposes only, set INSECURE_DEMO=1 environment variable.');
+      return;
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      this.updateError('❌ Missing GEMINI_API_KEY: Add your Gemini API key to environment variables. ⚠️ WARNING: This will expose your key to all users!');
+      return;
+    }
 
     this.client = new GoogleGenAI({
       apiKey: process.env.GEMINI_API_KEY,
